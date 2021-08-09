@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
+import { Frase } from './components/Frase';
+import { Boton, Contenedor } from './syles/StylesApp';
 
 function App() {
+
+  const [frase, guardarFrase] = useState({})
+  
+  const consultarAPI = async ()=>{
+    const api = await fetch('https://breaking-bad-quotes.herokuapp.com/v1/quotes');
+    const respuesta = await api.json();
+    guardarFrase(respuesta[0]);
+  }
+
+  useEffect(() => {
+    consultarAPI();
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Contenedor>
+      <Frase 
+        frase={frase}
+      />
+      <Boton
+        onClick={ consultarAPI }
+      >Obtener Frase</Boton>
+    </Contenedor>
   );
 }
 
